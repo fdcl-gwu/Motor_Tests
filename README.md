@@ -1,3 +1,24 @@
+# Motor_Tests
+This repository includes the code to 
+
+# Setting-up the repository
+Clone the repo and update the submodules:
+    ```
+    git clone https://github.com/fdcl-gwu/Motor_Tests
+    cd Motor_Tests
+    cd python_scripts
+    ```
+
+# Installing Arduino UNO
+Download the latest version of Arduino from https://www.arduino.cc/en/Main/Software . For the specific computer for the motor test, download the Arduino IDE for Linux 64 bits. Then save it, and extract it. Arduino will be executed from there. In the extracted folder, open a new terminal, and type the command ./install.sh
+(Source: https://www.arduino.cc/en/Guide/Linux/ )
+
+When it is installed, open Arduino IDE, from Tools, select board, and then select the appropriate board (for example UNO).
+
+Then connect Arduino board with USB to the computer. 
+
+# Calibrating Meter
+
 # Running a Motor Test
 1) Attach the motor to the test rig as shown in test_rig_setup.jpg. Measure the distance between the pivot and motor (b) and the pivot and sensor (d), preferably using calipers.
 
@@ -16,12 +37,21 @@
 
 4) Run a force calibration:
     1. Upload strain_reader.ino to the arduino.
-    2. With no weight on the sensor aside from the rig, run record.py for several seconds to determine the reading with zero thrust. Be sure to edit record.py with a suitable text file name and the port name corresponding to the arduino. A recommended text file name is '<motor><voltage>v1.txt'.
-    3. Add a known mass to the rig and run record.py again. A recommended file name is '<motor><voltage>v2.txt'. You should now have two text files that contain a single column of data read from the force sensor.
+    2. Open record.py. Update the line "text_file = open('/home/mbshbn/Documents/Motor_Tests/Results/robbev1.txt', 'w')" with the location and the name of the text file for data which will be saved later. A recommended text file name is 'calib_0.txt'. Also, Update the line "location='/dev/ttyACM0'" with the specefic poty name corresponding to the arduino. To find the port name, in the Terminal write:
+    ```
+    ls /dev/tty*
+    ```
+    3. With no weight on the sensor aside from the rig, run record.py for several seconds to determine the reading with zero thrust. To do this, open a Terminal in the folder called "python_scripts" located inside the "Motor_Tests", and type the following in the Terminal
+:
+    ```
+    python record.py
+    ```
+    4. Add a known mass, for example 46 gr, to the rig and run record.py again. Make sure to change the file name in record.py; A recommended file name is 'calib_46.txt'. You should now have two text files that contain a single column of data read from the force sensor.
+    5. Repeat step 4, for different masses.
 
 5) Attach a power supply to the motor and set it at a specific voltage, checking with a multimeter. Voltage may drift during the tests so be prepared to adjust the supply accordingly.
 
-6) Upload step_test.ino and run record.py (remember to update the file name). This should take about 15 mins.
+6) Upload step_test.ino and run record.py (remember to update the file name, recommended file name is'<motor><voltage>v2.txt'). This should take about 15 mins.
 
 7) Repeat steps 4-6 for each voltage you want to test. Let the motor cool between each test to keep the data consistent. It is important to do a force calibration before or after every test as the force sensor's readings could change.
 
