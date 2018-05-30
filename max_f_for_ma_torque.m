@@ -1,5 +1,5 @@
 clear;clc;
-%            b        d1     c  
+%         b        d1     c  
 % Motor-------Pivot----W1----loadcell
 
 
@@ -27,3 +27,9 @@ W1=100/1000*9.8;%N % the weight of weight that we add to balance the bar
 tau_max=0.21;%Newton.meter
 F_max_torque=(tau_max-W_motor*b+W1*d)/dc%0.7981 N % the amount of force that load cell feel if teh motor provides the maximum torque
 % Here, the load cell can measure the maximum load!
+
+%% To measure the maximum allowable load (W2) for calibration
+d1=d+c;% d1 is the distance between pivot and the place of load W2
+W2_max=(F_max_allowed-(-W_motor*b+W1*d)/dc)*(d+c)/d1
+m2_max=W2_max/9.8/1000% gram
+% if W1=100*9.8, and d1=d+c, then m2_max=612 gr 
