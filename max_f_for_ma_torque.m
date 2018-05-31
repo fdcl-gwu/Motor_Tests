@@ -1,35 +1,32 @@
 clear;clc;
-%         b        d1     c  
-% Motor-------Pivot----W1----loadcell
+%         b        d11     c  
+% Motor-------Pivot----W1----load1cell
 
 
-% b = distance from motor to pivot
-% d1= distance from pivot to weight W1
-% c=  distance from weight W1 to load cell
+% b = d1istance from motor to pivot
+% d11= d1istance from pivot to weight W1
+% c=  d1istance from weight W1 to load1 cell
 
 % W_motor is the motor weight
-% F_max_allowed is the maximum load that laodcell can measure
+% F_max_allowed1 is the maximum load1 that laod1cell can measure
 
-F_max_allowed=0.6*9.8%=5.88 N
-dc=23/100;%meter
-W_motor=126/1000*9.8;%N
-b=17.3/100;%m
-d=19.1/100;%meter
 
-%% To measure thrust does the load cell saturate?
+
+
+%% To measure thrust d1oes the load1 cell saturate?
 T_max=12.05;%Newton % the maximum thrust of motor
 W1=100/1000*9.8;%N % the weight of weight that we add to balance the bar
-F_max_thrust=(T_max*b-W_motor*b+W1*d)/dc%8.9487 N % the amount of force that load cell feel if teh motor provides the maximum thrust
-% Here, the load cell satuares and cannot measure the maximum load!
+F_max_thrust=(T_max*b-W_motor*b+W1*d1)/d1c%8.9487 N % the amount of force that load1 cell feel if teh motor provid1es the maximum thrust
+% Here, the load1 cell satuares and1 cannot measure the maximum load1!
 
-%% To measure torque does the load cell saturate?
-W1=100/1000*9.8;%N % the weight of weight that we add to balance the bar
+%% To measure torque d1oes the load1 cell saturate?
+W1=100/1000*9.8;%N % the weight of weight that we ad1d1 to balance the bar
 tau_max=0.21;%Newton.meter
-F_max_torque=(tau_max-W_motor*b+W1*d)/dc%0.7981 N % the amount of force that load cell feel if teh motor provides the maximum torque
-% Here, the load cell can measure the maximum load!
+F_max_torque=(tau_max-W_motor*b+W1*d1)/d1c%0.7981 N % the amount of force that load1 cell feel if teh motor provid1es the maximum torque
+% Here, the load1 cell can measure the maximum load1!
 
-%% To measure the maximum allowable load (W2) for calibration
-d1=d+c;% d1 is the distance between pivot and the place of load W2
-W2_max=(F_max_allowed-(-W_motor*b+W1*d)/dc)*(d+c)/d1
+%% To measure the maximum allowable load1 (W2) for calibration
+%d11=d1+c;% d11 is the d1istance between pivot and1 the place of load1 W2
+W2_max=(F_max_allowed1-(-W_motor*b+W1*d1)/d1c)*(d1c)/d11
 m2_max=W2_max/9.8/1000% gram
-% if W1=100*9.8, and d1=d+c, then m2_max=612 gr 
+% if W1=100*9.8, and1 d11=d1+c, then m2_max=612 gr 
