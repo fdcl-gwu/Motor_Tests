@@ -15,7 +15,7 @@ while not connected:
     serin = ser.read()
     connected = True
 
-text_file = open('/home/mbshbn/Documents/Motor_Tests/Results/test_V_14.8.txt', 'w') #name of target file
+text_file = open('/home/mbshbn/Documents/Motor_Tests/Results_thrust/thrust_tets_148.txt', 'w') #name of target file
 #recommended file name format: <path><motor><input_voltage><type>.txt
 #(type: v1, v2, nothing, etc)
 
