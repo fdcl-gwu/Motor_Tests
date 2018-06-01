@@ -1,8 +1,7 @@
-# Motor_Tests
-This repository includes the code to 
+This repository includes the code abnd instructions for testing motors, and measuring the relation between motor thrust and torue to throttle (command). 
 
 # Setting-up the repository
-Open a Terminal in the desired place and clone the repo :
+Open a Terminal in the desired folder clone the repo :
 
     ```
     git clone https://github.com/fdcl-gwu/Motor_Tests
@@ -11,34 +10,32 @@ Open a Terminal in the desired place and clone the repo :
     ```
 
 # Installing Arduino UNO
-Download the latest version of Arduino from https://www.arduino.cc/en/Main/Software . For the specific computer for the motor test, download the Arduino IDE for Linux 64 bits. Then save it, and extract it. Arduino will be executed from there. In the extracted folder, open a new terminal, and to install it, type the command ./install.sh
-(Source: https://www.arduino.cc/en/Guide/Linux/ )
+Download the latest version of Arduino from https://www.arduino.cc/en/Main/Software
+(for example Linux 64 bits). Then save and extract it. Arduino will be executed from there.
+In the extracted folder, open a new terminal, and to install it, type the command ./install.sh
 
-When it is installed, open Arduino IDE, from Tools, select board, and then select the appropriate board (for example UNO).
+When it is installed, open Arduino IDE, select board from Tools, and then select the appropriate board (for example UNO).
 
 Then connect Arduino board with USB to the computer. 
 
 # Calibrating the Meter
 
-# Some measurement before sarting the test
+## Some measurement before sarting the test
+
 %         b            d1       c  
 % Motor-------Pivot--------W1--------loadcell
 %                  --------------W2
 %                         d2
-% b = distance from motor to pivot
-% d1= distance from pivot to weight W1
-% d2= distance from pivot to weight W2 (weight used for calibration)
-% c = distance from weight W1 to load cell
+% "b" = distance from motor to pivot
+% "d1"= distance from pivot to weight W1
+% "d2"= distance from pivot to weight W2 (weight used for calibration)
+% "c" = distance from weight W1 to load cell
 
 W_motor is the motor weight.
 F_max_allowed is the maximum load that laodcell can measure. From the load cell manual (Omega LACE 600G), the maximum is 0.6 kgf, which is equal to 0.6*9.8=5.88 N. 
 W1 is the weight on the distance d1 from pivot to have a horizontal bar (balancing the weight of motor on the bar).
 
 % for torque test 
-W_motor=126/1000*9.8 (N),
-b=17.3/100 (m),
-d1=19.1/100 (m),
-d1+c=23/100 (m),
 
 1) Measure the maximum allowable load (W2) for calibration:
 In this case the motor is not running, so there is no thruat or torque from motor.
