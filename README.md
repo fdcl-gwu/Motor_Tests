@@ -20,46 +20,46 @@ Then connect Arduino board with USB to the computer.
 
 # Calibrating the Meter
 
-## Some measurement before sarting the test
+# Some measurement before starting the test
 
-%         b            d1       c  
-% Motor-------Pivot--------W1--------loadcell
-%                  --------------W2
-%                         d2
-% "b" = distance from motor to pivot
-% "d1"= distance from pivot to weight W1
-% "d2"= distance from pivot to weight W2 (weight used for calibration)
-% "c" = distance from weight W1 to load cell
+
+suppose that
 
 W_motor is the motor weight.
+
 F_max_allowed is the maximum load that laodcell can measure. From the load cell manual (Omega LACE 600G), the maximum is 0.6 kgf, which is equal to 0.6*9.8=5.88 N. 
+
 W1 is the weight on the distance d1 from pivot to have a horizontal bar (balancing the weight of motor on the bar).
 
-% for torque test 
+![alt text](Photo_readme/calib.gif "Description goes here")
 
-1) Measure the maximum allowable load (W2) for calibration:
-In this case the motor is not running, so there is no thruat or torque from motor.
+## Measure the maximum allowable load (W2) for calibration:
 
-W2_max=(F_max_allowed(d1+c)+W_motor*b-W1*d1)/d2
-m2_max=W2_max/9.8/1000% gram
-% if W1=100*9.8/1000, and d2=d1+c, then m2_max=612 gr 
-% if W1=46*9.8/1000, and d2=d1+c, then m2_max=? gr 
+In this case the motor is not running, so there is no thrust or torque from motor.
 
-2) Measure the maximum thrust that the load cell can measure:
+W2_max=(F_max_allowed(d1+c)+W_motor*b-W1*d1)/d2 (N)
+
+m2_max=W2_max/9.8/1000 (gr)
+
+
+## Measure the maximum thrust that the load cell can measure:
+
 In other words, measure the amount of force that the load cell measure if the motor provides the maximum thrust.
 
-T_max is the maximum thrust of motor. In case of using Tiger 700 it is 12.04 N.
+T_max is the maximum thrust of motor. For Tiger 700 motor and 11*3.7 CF propeller, it is 12.04 N.
 
-F_max_thrust=(T_max*b-W_motor*b+W1*d1)/(d1+c)
+F_max_thrust=(T_max*b-W_motor*b+W1*d1)/(d1+c) (N)
 
-If the F_max_thrust>5.5, decrease b and increase d1+c. 
+If the F_max_thrust > F_max_allowed, then decrease b and increase d1+c. 
 
-3) Measure the maximum torque that the load cell can measure:
-In other words, measure the amount of force that the load cell measure if the motor provides the maximum torque.
+
+## Measure the maximum torque that the load cell can measure:
+
+In other words, measure the amount of force that the load cell measures if the motor provides the maximum torque.
 
 F_max_torque=(tau_max-W_motor*b+W1*d1)/(d1+c).
 
-Again here, if the F_max_thrust>5.5, decrease b and increase d1+c. 
+Again here, if the F_max_thrust > F_max_allowed, then decrease b and increase d1+c. 
 
 # Running a Motor Test
 1) Attach the motor to the test rig as shown in test_rig_setup.jpg. Measure the distance between the pivot and motor (b) and the pivot and sensor (d), preferably using calipers.
