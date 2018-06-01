@@ -101,10 +101,15 @@ Again here, if F_max_torque > F_max_allowed, then decrease b and increase d1+c.
 
 8) Repeat steps 4-6 for each voltage you want to test. Let the motor cool between each test to keep the data consistent. It is important to do a force calibration before or after every test as the force sensor's readings could change.
 
-# Post process the data
+# Post processing the data
+1. Run post_porcess_thrust_test.m (instructions are provided inside the mfile) to compute and plot all required data from the thrust test.
+2. Run post_porcess_torque_test.m (instructions are provided inside the mfile) to compute and plot all required data from the torque test.
+3. To compute C_tau, run compute_C_tau (instructions are provided inside the mfile). 
+
+
+# Find voltage and throttle relationships
 Run analysis.py to filter data and format it for graphing. Be sure to update the file paths and tailor the data analysis to fit your own needs.
 
-#Find voltage and throttle relationships
 Using the data from analysis.py, you can run escVolt2cmd.py, escVolt2cmd_send.py, inputVolt2cmd.py, or inputVolt2cmd_send.py. Before running either of the send programs, do a force calibration, input the v1, v2, d, b, and m values into cmd_reader.ino, and then upload cmd_reader to the arduino. 
 - inputVolt2cmd.py calculates the proper command given the desired force and input voltage
 - inputVolt2cmd_send.py does the calculations of inputVolt2cmd.py and sends the command to the ESC.

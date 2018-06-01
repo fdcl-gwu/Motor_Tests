@@ -1,0 +1,118 @@
+%\documentclass[letterpaper, 10pt, conference]{ieeeconf}
+\documentclass[12pt, reqno]{article} 
+%\IEEEoverridecommandlockouts \overrideIEEEmargins
+\usepackage[letterpaper, total={7.2in, 9.6in},tmargin=0.7in,lmargin=0.65in]{geometry}% mah
+\usepackage{amsmath,amssymb,url}
+\usepackage{graphicx,subfigure,warmread}
+\usepackage[all,import]{xy}
+\usepackage{color}
+\usepackage{epstopdf}%
+%\usepackage{scalerel,stackengine}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
+\usepackage{float}
+\graphicspath{{./figures/}}% path to images
+
+
+\newcommand{\norm}[1]{\ensuremath{\left\| #1 \right\|}}
+\newcommand{\abs}[1]{\ensuremath{\left| #1 \right|}}
+\newcommand{\bracket}[1]{\ensuremath{\left[ #1 \right]}}
+\newcommand{\braces}[1]{\ensuremath{\left\{ #1 \right\}}}
+\newcommand{\parenth}[1]{\ensuremath{\left( #1 \right)}}
+\newcommand{\ip}[1]{\ensuremath{\langle #1 \rangle}}
+\newcommand{\refeqn}[1]{(\ref{eqn:#1})}
+\newcommand{\reffig}[1]{Fig. \ref{fig:#1}}
+\newcommand{\tr}[1]{\mbox{tr}\ensuremath{\negthickspace\bracket{#1}}}
+\newcommand{\deriv}[2]{\ensuremath{\frac{\partial #1}{\partial #2}}}
+\newcommand{\G}{\ensuremath{\mathsf{G}}}
+\newcommand{\SO}{\ensuremath{\mathsf{SO(3)}}}
+\newcommand{\T}{\ensuremath{\mathsf{T}}}
+\renewcommand{\L}{\ensuremath{\mathsf{L}}}
+\newcommand{\so}{\ensuremath{\mathfrak{so}(3)}}
+\newcommand{\SE}{\ensuremath{\mathsf{SE(3)}}}
+\newcommand{\se}{\ensuremath{\mathfrak{se}(3)}}
+\renewcommand{\Re}{\ensuremath{\mathbb{R}}}
+\newcommand{\Sph}{\ensuremath{\mathsf{S}}}
+\newcommand{\aSE}[2]{\ensuremath{\begin{bmatrix}#1&#2\\0&1\end{bmatrix}}}
+\newcommand{\ase}[2]{\ensuremath{\begin{bmatrix}#1&#2\\0&0\end{bmatrix}}}
+\newcommand{\D}{\ensuremath{\mathbf{D}}}
+\newcommand{\pair}[1]{\ensuremath{\left\langle #1 \right\rangle}}
+\newcommand{\met}[1]{\ensuremath{\langle\!\langle #1 \rangle\!\rangle}}
+\newcommand{\Ad}{\ensuremath{\mathrm{Ad}}}
+\newcommand{\ad}{\ensuremath{\mathrm{ad}}}
+\newcommand{\g}{\ensuremath{\mathfrak{g}}}
+\newcommand{\btheta}{\ensuremath{\boldsymbol\theta}}
+\usepackage{hyperref}
+
+\title{\LARGE \bf
+Bounds on $c_1$ and $c_2$}
+
+\author{Mahdis Bisheban}
+
+\newcommand{\EditTL}[1]{{\color{red}\protect #1}}
+\renewcommand{\EditTL}[1]{{\protect #1}}
+
+
+\newtheorem{definition}{Definition}
+\newtheorem{lem}{Lemma}
+\newtheorem{prop}{Proposition}
+\newtheorem{remark}{Remark}
+
+
+\begin{document}
+\allowdisplaybreaks
+\maketitle \thispagestyle{empty} \pagestyle{empty}
+
+
+
+% for torque test 
+W_motor=126/1000*9.8 (N),
+b=17.3/100 (m),
+d1=19.1/100 (m),
+d1+c=23/100 (m),
+
+%         b            d1       c  
+% Motor-------Pivot--------W1--------loadcell
+%                  --------------W2
+%                         d2
+% "b" = distance from motor to pivot
+% "d1"= distance from pivot to weight W1
+% "d2"= distance from pivot to weight W2 (weight used for calibration)
+% "c" = distance from weight W1 to load cell
+
+ if W1=100*9.8/1000, and d2=d1+c, then m2_max=612 gr 
+ if W1=46*9.8/1000, and d2=d1+c, then m2_max=? gr 
+
+The maximum alloawable mass for calibration can be found using the provided Matlab mfile in the Motor_Tests folder. For the current configuration, it is 612 gram.
+
+\end{gather}
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[width=0.4\columnwidth]{balanced-rc-propeller}
+%	\caption{Balancing propellers}\label{fig:x1}
+%\end{figure}
+
+
+%\begin{figure}[H]%
+%\centerline{
+%	\subfigure[Position]{\includegraphics[width=0.50\columnwidth]{X}}
+%	\hfill
+%	\subfigure[Velocity]{\includegraphics[width=0.50\columnwidth]{V}}	
+%}
+%\centerline{
+%	\subfigure[Attitude]{\includegraphics[width=0.50\columnwidth]{R}}
+%	\hfill
+%	\subfigure[Angular velocity]{\includegraphics[width=0.50\columnwidth]{Omega}}	
+%}
+%\caption{Case I: Trajectories (The true and estimated plots are pretty close) $Red: estimated$, $Blue: initial$, $Cyan: true$. }
+%\label{fig:traj}
+%\end{figure}
+
+
+
+
+%\bibliographystyle{abbrv}
+%\bibliography{mybib}
+%\bibliographystyle{IEEEtran}
+
+\end{document}

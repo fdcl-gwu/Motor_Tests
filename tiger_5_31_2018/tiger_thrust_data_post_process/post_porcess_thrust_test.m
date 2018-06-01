@@ -1,6 +1,7 @@
 clear;close all;clc
-%% calibrate:
+%% reading calibration data:
 load all_calib_thrust_data
+% Do not use the first and the last parts of data 
 size(calib0)
 x(1)=mean(calib0(1000:4000));
 size(calib72)
@@ -19,7 +20,8 @@ size(calib372)
 x(8)=mean(calib372(1000:3900));
 size(calib500)
 x(9)=mean(calib500(1000:3500));
-x % read from gauge
+%% Find the relationship between reading from load cell and weights
+x % reading from load cell
 y=[0;72;100;172;200;272;300;372;500];% known mass (gram) on the sensor
 mass_function = fit(x',y,'poly1')
 % Linear model Poly1:
@@ -33,17 +35,9 @@ xlabel('Reading from load cell')
 ylabel('Mass (gr)')
 %%
 arm_motor=8.2/100;
-arm_gauge=23/100;
-%%
-
-% In the follwing code, select a text file to be read for example
-% 'Motor1_11.1.txt', then change the name of file to be saved in
-% save('Motor1_114') and also in saveas(gcf,[pwd
-% ['Motor1_114_Current' ],'.fig']); and
-% saveas(gcf,[pwd ['Motor1_120_Current' ],'.eps'],'epsc2');
-
+arm_load_cell=23/100;
 %% Read File
-filename = 'F:\FDCL Mahdis Git\Motor_Tests\tiger_thrust_for_Ctau\thrust_tets_148.txt'
+filename = 'F:\FDCL Mahdis Git\Motor_Tests\tiger_5_31_2018\tiger_thrust_for_Ctau\thrust_tets_148.txt'
 delimiter = ',';
 formatSpec = '%f%f%f%f%f%f%f%f%[^\n\r]';
 fileID = fopen(filename,'r');
@@ -65,8 +59,7 @@ Volt=Volt./10;
 RPM=RPM_Hz.*60;
 
 Weight=9.8*mass_function(Omega_read)/1000;% kg
-thrust=arm_gauge.*Weight/arm_motor;% N
-%torque=arm_gauge.*Weight;
+thrust=arm_load_cell.*Weight/arm_motor;% N
 %%
 % cell arrays:
 for j=1:22
@@ -96,17 +89,12 @@ MAH_avg=cell2mat(MAH_avg);
 Volt_avg=cell2mat(Volt_avg);
 Weight_avg=cell2mat(Weight_avg);
 Thrust_avg=cell2mat(Thrust_avg);
-%Torque_avg=cell2mat(Torque_avg);
 
-% size(Thrust_avg)
-% size(Torque_avg)
-% Torque_thrust_function = fit(Thrust_avg',Torque_avg','poly1')
-% figure
-% plot(Torque_thrust_function,'--',Thrust_avg,Torque_avg','k.');
-% xlabel('Thrust avg (N)')
-% ylabel('Torque avg (Nm)')
-
-save('Ctau_148')
+save('thrust_data_148')
+%%
+% to save in diffrent folder saveas(gcf,[pwd
+% ['Motor1_114_Current' ],'.fig']); and
+% saveas(gcf,[pwd ['Motor1_120_Current' ],'.eps'],'epsc2');
 
 AxesFont_f=16;font_f=16;
 set(gcf,'DefaultAxesFontSize',AxesFont_f);
@@ -150,16 +138,11 @@ xlabel('Command_avg','fontsize',font_f,'interpreter','latex');
 ylabel('Weight_avg','fontsize',font_f,'interpreter','latex')
 saveas(gcf,'C_tau_148wieght.fig');
 saveas(gcf,'C_tau_148wieght.eps','epsc2');
-
-
 figure
 scatter(Command_avg,Thrust_avg)
 xlabel('Command_avg','fontsize',font_f,'interpreter','latex');
 ylabel('Thrust_avg (N)','fontsize',font_f,'interpreter','latex')
 saveas(gcf,'C_tau_148thrust.fig');
 saveas(gcf,'C_tau_148thrust.eps','epsc2');
-
-% saveas(gcf,[pwd ['C_tau_148thrust' ],'.fig']);
-% saveas(gcf,[pwd ['C_tau_148thrust' ],'.eps'],'epsc2');
-
+%% saving the requied data to find C_tau
 save('thrusts_data.mat','Command_avg','Thrust_avg')

@@ -41,7 +41,7 @@ ylabel('Torque_avg/Thrust_avg','fontsize',font_f,'interpreter','latex')
 saveas(gcf,[pwd ['C_tau_148torquethrust' ],'.fig']);
 saveas(gcf,[pwd ['C_tau_148torquethrust' ],'.eps'],'epsc2');
 
-
+%% Data from motor manual:
 T_avg_manual=[4.508;6.958;8.526;10.584;12.054];
 Torque_avg_manual=[0.08;0.13;0.15;0.19;0.21];
 Torque_thrust_function_manual = fit(T_avg_manual,Torque_avg_manual,'poly1')
@@ -49,3 +49,4 @@ figure
 plot(Torque_thrust_function_manual,'--',T_avg_manual,Torque_avg_manual','k.');
 xlabel('Thrust avg (N)')
 ylabel('Torque avg (Nm)')
+title('From motor manual')
