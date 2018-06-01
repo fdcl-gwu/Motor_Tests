@@ -90,6 +90,10 @@ Volt_avg=cell2mat(Volt_avg);
 Weight_avg=cell2mat(Weight_avg);
 Thrust_avg=cell2mat(Thrust_avg);
 
+
+mass_function = fit(Command_avg,Thrust_avg,'poly1')
+
+
 save('thrust_data_148')
 %%
 % to save in diffrent folder saveas(gcf,[pwd
