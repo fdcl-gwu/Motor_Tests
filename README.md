@@ -95,7 +95,7 @@ Again here, if F_max_torque > F_max_allowed, then decrease b and increase d1+c.
     4. Add a known mass, for example 46 gr, to the rig and run record.py again. Make sure to change the file name in record.py; A recommended file name, for 46 gr mass, is 'calib_46.txt'. You should now have two text files that contain a single column of data read from the force sensor.
     5. Repeat step 5, for different masses. Make sure that you do not overload the load cell.
 
-6) Attach a power supply to the motor and set it at a specific voltage (14.8 V Tiger 700 motor and 11*3.7 CF propeller), checking with a multimeter. The Voltage may drift during the tests so be prepared to adjust the supply accordingly.
+6) Attach a power supply to the motor and set it at a specific voltage (Tiger 700 motor and 11*3.7 CF propeller with 14.8 V), checking with a multimeter. The Voltage may drift during the tests so be prepared to adjust the supply accordingly.
 
 7) Upload step_test.ino and run record.py (remember to update the file name, a recommended file name is'motor_voltage.txt'). Make sure that the propellers are blowing wind downside, otherwise reverse two of the motor wires. This should take about 15 mins. 
 
@@ -106,6 +106,7 @@ Again here, if F_max_torque > F_max_allowed, then decrease b and increase d1+c.
 2. Run post_porcess_torque_test.m (instructions are provided inside the mfile) to compute and plot all required data from the torque test.
 3. To compute C_tau, run compute_C_tau (instructions are provided inside the mfile). 
 
+The results of processing data for Tiger 700 motor and 11*3.7 CF propeller with 14.8 V is provided in the report in the Report folder.
 
 # Find voltage and throttle relationships
 Run analysis.py to filter data and format it for graphing. Be sure to update the file paths and tailor the data analysis to fit your own needs.
