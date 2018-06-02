@@ -1,6 +1,7 @@
 /tiger_Ctau_30_5_2018/plots/
-/Results
-/Results_thrust
 *.eps
 *.fig
-*.mat
+*.aux
+*.log
+*.out
+Report.synctex.gz

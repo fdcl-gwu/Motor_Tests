@@ -24,11 +24,12 @@ x(9)=mean(calib500(1000:3500));
 x % reading from load cell
 y=[0;72;100;172;200;272;300;372;500];% known mass (gram) on the sensor
 mass_function = fit(x',y,'poly1')
-% Linear model Poly1:
+% mass_function = 
+%      Linear model Poly1:
 %      mass_function(x) = p1*x + p2
 %      Coefficients (with 95% confidence bounds):
-%        p1 =      0.4947  (0.4912, 0.4983)
-%        p2 =      -7.689  (-9.52, -5.858)
+%        p1 =      0.4959  (0.4806, 0.5113)
+%        p2 =      -18.28  (-26.98, -9.576)
 figure
 plot(mass_function,'--',x,y','k.');
 xlabel('Reading from load cell')
@@ -37,7 +38,7 @@ ylabel('Mass (gr)')
 arm_motor=8.2/100;
 arm_load_cell=23/100;
 %% Read File
-filename = 'F:\FDCL Mahdis Git\Motor_Tests\tiger_5_31_2018\tiger_thrust_for_Ctau\thrust_tets_148.txt'
+filename = 'F:\FDCL Mahdis Git\Motor_Tests\tiger_5_31_2018\tiger_thrust_data_post_process\thrust_tets_148.txt'
 delimiter = ',';
 formatSpec = '%f%f%f%f%f%f%f%f%[^\n\r]';
 fileID = fopen(filename,'r');
@@ -63,7 +64,6 @@ thrust=arm_load_cell.*Weight/arm_motor;% N
 %%
 % cell arrays:
 for j=1:22
-    j
     A{j} =find(Command==10+(j-1)*10);
     Command_avg{j}=10+(j-1)*10;
     init_state{j}=find(State(A{j})==255,1)+150;% A{j}(1)+% 150=350*3/7, 350=7700/21
@@ -90,7 +90,20 @@ Volt_avg=cell2mat(Volt_avg);
 Weight_avg=cell2mat(Weight_avg);
 Thrust_avg=cell2mat(Thrust_avg);
 
-save('thrust_data_148')
+Thrust_throttle_func = fit(Thrust_avg',Command_avg','poly2')
+% Linear model Poly2:
+%      Thrust_throttle_func(x) = p1*x^2 + p2*x + p3
+%      Coefficients (with 95% confidence bounds):
+%        p1 =      -1.784  (-2.176, -1.392)
+%        p2 =       38.45  (34.62, 42.28)
+%        p3 =       6.359  (-0.6873, 13.4)
+figure
+plot(Thrust_throttle_func,'--',Thrust_avg,Command_avg,'k.');
+xlabel('Thrust (N)')
+ylabel('Throttle')
+
+
+%save('thrust_data_148')
 %%
 % to save in diffrent folder saveas(gcf,[pwd
 % ['Motor1_114_Current' ],'.fig']); and
