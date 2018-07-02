@@ -1,5 +1,4 @@
 This repository includes the code and the instructions for testing motors and measuring the relation between motor thrust and torque and throttle (command). 
-color.Red(test)
 
 # Setting-up the repository
 Open a Terminal in the desired folder clone the repo :
