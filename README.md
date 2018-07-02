@@ -108,7 +108,12 @@ Again here, if F_max_torque > F_max_allowed, then decrease b and increase d1+c.
 4. Run post_porcess_torque_test.m (instructions are provided inside the mfile) to compute and plot all required data from the torque test.
 5. To compute C_tau, run compute_C_tau (instructions are provided inside the mfile). 
 
-The results of processing data for Tiger 700 motor and 11*3.7 CF propeller with 14.8 V is provided in the report in the Report folder.
+The results of processing data for Tiger 700 motor and 11*3.7 CF propeller with 14.8 V & 16.2 V is provided in the Report folder.
+Throttle=p1*thrust^2 + p2*thrust + p3.
+
+For 14.8V: p1 = -1.784, p2 = 38.45, p3 = 6.359,   C_tau=0.0135.
+
+For 16.2V: p1 = -1.414, p2 = 34.46, p3 = 1.979.
 
 # Find voltage and throttle relationships
 Run analysis.py to filter data and format it for graphing. Be sure to update the file paths and tailor the data analysis to fit your own needs.
