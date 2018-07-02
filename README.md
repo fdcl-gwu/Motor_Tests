@@ -102,9 +102,11 @@ Again here, if F_max_torque > F_max_allowed, then decrease b and increase d1+c.
 8) Repeat steps 4-6 for each voltage you want to test. Let the motor cool between each test to keep the data consistent. It is important to do a force calibration before or after every test as the force sensor's readings could change.
 
 # Post processing the data
-1. Run post_porcess_thrust_test.m (instructions are provided inside the mfile) to compute and plot all required data from the thrust test.
-2. Run post_porcess_torque_test.m (instructions are provided inside the mfile) to compute and plot all required data from the torque test.
-3. To compute C_tau, run compute_C_tau (instructions are provided inside the mfile). 
+1. Make a new folder, and copy all the calibration text files as well as motor test data text files in it.
+2. From the folder called "Post_process_Matlab_files", copy all the three mfiles to the folder that you made it.
+3. Run post_porcess_thrust_test.m (instructions are provided inside the mfile) to compute and plot all required data from the thrust test. You may change the name of the text files which you saved from your experiment.
+4. Run post_porcess_torque_test.m (instructions are provided inside the mfile) to compute and plot all required data from the torque test.
+5. To compute C_tau, run compute_C_tau (instructions are provided inside the mfile). 
 
 The results of processing data for Tiger 700 motor and 11*3.7 CF propeller with 14.8 V is provided in the report in the Report folder.
 
