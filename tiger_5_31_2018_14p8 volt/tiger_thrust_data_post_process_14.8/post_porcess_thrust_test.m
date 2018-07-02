@@ -38,7 +38,7 @@ ylabel('Mass (gr)')
 arm_motor=8.2/100;
 arm_load_cell=23/100;
 %% Read File
-filename = 'F:\FDCL Mahdis Git\Motor_Tests\tiger_5_31_2018\tiger_thrust_data_post_process\thrust_tets_148.txt'
+filename = 'F:\FDCL Mahdis Git\Motor_Tests\tiger_5_31_2018\tiger_thrust_data_post_process_14.8\thrust_tets_148.txt'
 delimiter = ',';
 formatSpec = '%f%f%f%f%f%f%f%f%[^\n\r]';
 fileID = fopen(filename,'r');
