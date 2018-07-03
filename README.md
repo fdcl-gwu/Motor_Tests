@@ -115,7 +115,7 @@ From 14.8V:  C_tau=0.0135.
 
 From 16.2V: p1 = 0.0002036, p2 = 0.003627, p3 = 0.6563. So, throttle=sqrt((thrust-p3)/p1+p2^2/4/p1/p1)-p2/2/p1
 or you can type "cftool" in Matlab command, and fit a function to data:
-![alt text](Photo_readme/fit.png "Description goes here")
+![alt text](Photo_readme/fit.gif "Description goes here")
 
 # Find voltage and throttle relationships
 Run analysis.py to filter data and format it for graphing. Be sure to update the file paths and tailor the data analysis to fit your own needs.
