@@ -45,7 +45,7 @@
 \usepackage{hyperref}
 
 \title{\LARGE \bf
-Bounds on $c_1$ and $c_2$}
+Final expressions for Tiger 700 motor and 11*3.7 CF propeller with 14.8 V}
 
 \author{Mahdis Bisheban}
 
@@ -64,35 +64,42 @@ Bounds on $c_1$ and $c_2$}
 \maketitle \thispagestyle{empty} \pagestyle{empty}
 
 
-
-% for torque test 
-W_motor=126/1000*9.8 (N),
-b=17.3/100 (m),
-d1=19.1/100 (m),
-d1+c=23/100 (m),
-
-%         b            d1       c  
-% Motor-------Pivot--------W1--------loadcell
-%                  --------------W2
-%                         d2
-% "b" = distance from motor to pivot
-% "d1"= distance from pivot to weight W1
-% "d2"= distance from pivot to weight W2 (weight used for calibration)
-% "c" = distance from weight W1 to load cell
-
- if W1=100*9.8/1000, and d2=d1+c, then m2_max=612 gr 
- if W1=46*9.8/1000, and d2=d1+c, then m2_max=? gr 
-
-The maximum alloawable mass for calibration can be found using the provided Matlab mfile in the Motor_Tests folder. For the current configuration, it is 612 gram.
-
+The following is from experimental data:
+\begin{gather}
+      Throttle = p_1T^2 + p_2*T + p_3\\
+      \text{Coefficients (with 95\% confidence bounds):}\\
+        p_1 =      -1.784  (-2.176, -1.392)\\
+        p_2 =       38.45  (34.62, 42.28)\\
+        p_3 =       6.359  (-0.6873, 13.4)
 \end{gather}
-%\begin{figure}[H]
-%	\centering
-%	\includegraphics[width=0.4\columnwidth]{balanced-rc-propeller}
-%	\caption{Balancing propellers}\label{fig:x1}
-%\end{figure}
 
 
+\begin{gather}
+\tau =  p_1 T + p_2\\
+\text{Coefficients (with 95\% confidence bounds):}\\
+p_1 =     0.01351  (0.01283, 0.01419)\\
+p_2 =    0.006128  (0.002816, 0.009441)\\
+\end{gather}
+
+The following is from motor manual:
+\begin{gather}
+\tau = p_1 T + p_2\\
+\text{Coefficients (with 95\% confidence bounds):}\\
+p_1 =     0.01719  (0.01498, 0.0194)\\
+p_2 =    0.005421  (-0.01431, 0.02515)\\
+\end{gather}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\columnwidth]{throttle_thrust}
+	\caption{Throttle vs thrust (N)}\label{fig2}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\columnwidth]{C_tau}
+	\caption{Torque (Nm) vs thrust (N)}\label{fig1}
+\end{figure}
 %\begin{figure}[H]%
 %\centerline{
 %	\subfigure[Position]{\includegraphics[width=0.50\columnwidth]{X}}
@@ -107,12 +114,5 @@ The maximum alloawable mass for calibration can be found using the provided Matl
 %\caption{Case I: Trajectories (The true and estimated plots are pretty close) $Red: estimated$, $Blue: initial$, $Cyan: true$. }
 %\label{fig:traj}
 %\end{figure}
-
-
-
-
-%\bibliographystyle{abbrv}
-%\bibliography{mybib}
-%\bibliographystyle{IEEEtran}
 
 \end{document}

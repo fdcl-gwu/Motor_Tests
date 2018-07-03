@@ -1,5 +1,11 @@
 /tiger_Ctau_30_5_2018/plots/
-/Results
-/Results_thrust
 *.eps
 *.fig
+<<<<<<< HEAD
+=======
+*.aux
+*.log
+*.out
+Report.synctex.gz
+/tiger_7_2_2018
+>>>>>>> mahdis
