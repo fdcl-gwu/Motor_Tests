@@ -1,44 +1,98 @@
 clear;close all;clc
+%% Import text data:
+% First import each text file as a numeric matrix. In matlab set "Output
+% Type" as "Numeric Matrix", shown in the figure.
+
+% Or use the following:
+calib0 = import_text_data("calib_0.txt");
+calib72 = import_text_data("calib_72.txt");
+
+calib100 = import_text_data("calib_100.txt");
+calib110 = import_text_data("calib_110.txt");
+calib120 = import_text_data("calib_120.txt");
+calib172 = import_text_data("calib_172.txt");
+
+calib200 = import_text_data("calib_200.txt");
+calib220 = import_text_data("calib_220.txt");
+calib272 = import_text_data("calib_272.txt");
+
+calib300 = import_text_data("calib_300.txt");
+calib320 = import_text_data("calib_320.txt");
+calib372 = import_text_data("calib_372.txt");
+
+calib400 = import_text_data("calib_400.txt");
+calib410 = import_text_data("calib_410.txt");
+calib420 = import_text_data("calib_420.txt");
+calib440 = import_text_data("calib_440.txt");
+calib450 = import_text_data("calib_450.txt");
+calib472 = import_text_data("calib_472.txt");
+
+calib500 = import_text_data("calib_500.txt");
+calib510 = import_text_data("calib_510.txt");
+calib520 = import_text_data("calib_520.txt");
+calib540 = import_text_data("calib_540.txt");
+calib572 = import_text_data("calib_572.txt");
+calib592 = import_text_data("calib_592.txt");
+
+calib620 = import_text_data("calib_620.txt");
+
+save all_calib_thrust_data
 %% reading calibration data:
-load all_calib_thrust_data
+% load all_calib_thrust_data
 % Do not use the first and the last parts of data 
-size(calib0)
-x(1)=mean(calib0(1000:4000));
-size(calib72)
-x(2)=mean(calib72(1000:4000));
-size(calib100)
-x(3)=mean(calib100(1000:2500));%%%
-size(calib172)
-x(4)=mean(calib172(1000:2500));
-size(calib200)
-x(5)=mean(calib200(1000:2200));
-size(calib272)
-x(6)=mean(calib272(1000:3000));
-size(calib300)
-x(7)=mean(calib300(1000:3900));
-size(calib372)
-x(8)=mean(calib372(1000:3900));
-size(calib500)
-x(9)=mean(calib500(1000:3500));
+x(1)=mean(keep_last_2000(calib0));
+x(2)=mean(keep_last_2000(calib72));
+
+x(3)=mean(keep_last_2000(calib100));%%%
+x(4)=mean(keep_last_2000(calib110));%%%
+x(5)=mean(keep_last_2000(calib120));%%%
+x(6)=mean(keep_last_2000(calib172));%%%
+
+x(7)=mean(keep_last_2000(calib200));
+x(8)=mean(keep_last_2000(calib220));
+x(9)=mean(keep_last_2000(calib272));
+
+x(10)=mean(keep_last_2000(calib300));
+x(11)=mean(keep_last_2000(calib320));
+x(12)=mean(keep_last_2000(calib372));
+
+x(13)=mean(keep_last_2000(calib400));
+x(14)=mean(keep_last_2000(calib410));
+x(15)=mean(keep_last_2000(calib420));
+x(16)=mean(keep_last_2000(calib440));
+x(17)=mean(keep_last_2000(calib450));
+x(18)=mean(keep_last_2000(calib472));
+
+x(19)=mean(keep_last_2000(calib500));
+x(20)=mean(keep_last_2000(calib510));
+x(21)=mean(keep_last_2000(calib520));
+x(22)=mean(keep_last_2000(calib540));
+x(23)=mean(keep_last_2000(calib572));
+x(24)=mean(keep_last_2000(calib592));
+
+x(25)=mean(keep_last_2000(calib620));
+
 %% Find the relationship between reading from load cell and weights
 x % reading from load cell
-y=[0;72;100;172;200;272;300;372;500];% known mass (gram) on the sensor
-mass_function = fit(x',y,'poly1')
+y=[0;72; 100;110;120;172; 200;220;272; 300;320;372; 400;410;420;440;450;472;];% 500;510;520;540;572;592; 620];% known mass (gram) on the sensor
+% for this 5 masses reading is the same, so do not use them!
+size(y)
+mass_function = fit(x(1:18)',y,'poly1')
 % mass_function = 
 %      Linear model Poly1:
 %      mass_function(x) = p1*x + p2
 %      Coefficients (with 95% confidence bounds):
-%        p1 =      0.4959  (0.4806, 0.5113)
-%        p2 =      -18.28  (-26.98, -9.576)
+%  p1 =      0.5419  (0.4979, 0.5858)
+%        p2 =      -34.53  (-68.64, -0.4185)
 figure
-plot(mass_function,'--',x,y','k.');
+plot(mass_function,'--',x(1:18),y','k.');
 xlabel('Reading from load cell')
 ylabel('Mass (gr)')
 %%
-arm_motor=8.2/100;
+arm_motor=8.5/100;
 arm_load_cell=23/100;
 %% Read File
-filename = 'F:\FDCL Mahdis Git\Motor_Tests\tiger_5_31_2018\tiger_thrust_data_post_process\thrust_tets_148.txt'
+filename = 'Motor_16p3.txt'%F:\FDCL Mahdis Git\Motor_Tests\tiger7_2_2018_shorter_wire\
 delimiter = ',';
 formatSpec = '%f%f%f%f%f%f%f%f%[^\n\r]';
 fileID = fopen(filename,'r');
@@ -92,25 +146,37 @@ Thrust_avg=cell2mat(Thrust_avg);
 
 Thrust_throttle_func = fit(Thrust_avg',Command_avg','poly2')
 % Linear model Poly2:
-%      Thrust_throttle_func(x) = p1*x^2 + p2*x + p3
-%      Coefficients (with 95% confidence bounds):
-%        p1 =      -1.784  (-2.176, -1.392)
-%        p2 =       38.45  (34.62, 42.28)
-%        p3 =       6.359  (-0.6873, 13.4)
+%        p1 =      -1.127  (-1.382, -0.8716)
+%        p2 =       29.54  (26.55, 32.53)
+%        p3 =       18.33  (11.91, 24.76)
 figure
 plot(Thrust_throttle_func,'--',Thrust_avg,Command_avg,'k.');
 xlabel('Thrust (N)')
 ylabel('Throttle')
 
+p1=-1.784;p2=38.45;p3=6.359;
+for i=1:size(Thrust_avg,2)
+    Command_avg_14p8(i)=p1*Thrust_avg(i)^2 + p2*Thrust_avg(i) + p3;
+end
+hold on
+scatter(Thrust_avg,Command_avg_14p8,'r');
 
 %save('thrust_data_148')
 %%
 % to save in diffrent folder saveas(gcf,[pwd
 % ['Motor1_114_Current' ],'.fig']); and
 % saveas(gcf,[pwd ['Motor1_120_Current' ],'.eps'],'epsc2');
-
+figure
 AxesFont_f=16;font_f=16;
 set(gcf,'DefaultAxesFontSize',AxesFont_f);
+
+Power_avg=Volt_avg.*Current_avg;
+scatter(Command_avg,Power_avg)
+xlabel('Command_avg','fontsize',font_f,'interpreter','latex');
+ylabel('Power_avg','fontsize',font_f,'interpreter','latex')
+saveas(gcf,'C_tau_148Powerfig');
+saveas(gcf,'C_tau_148Power','epsc2');
+
 scatter(Command_avg,Current_avg)
 xlabel('Command_avg','fontsize',font_f,'interpreter','latex');
 ylabel('Current_avg','fontsize',font_f,'interpreter','latex')
