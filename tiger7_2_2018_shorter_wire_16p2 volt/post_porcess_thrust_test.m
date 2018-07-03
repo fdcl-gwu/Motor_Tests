@@ -178,7 +178,7 @@ title('throttle=sqrt((Thrust-p3)/p1+p2^2/4/p1/p1)-p2/2/p1')
 % from cftool: Type cftool in matlab comamnd line:
 %Coefficients (with 95% confidence bounds):
 a =       129.9 ;% (100.1, 159.8)
-b =      0.3666 ;% (0.3092, 0.4241)
+b =       0.3666 ;% (0.3092, 0.4241)
 c =      -96.73 ;% (-127.8, -65.62)
 Thrust_to_throttle_func = a.*Thrust_avg.^b+c;
 % check other numbers:
