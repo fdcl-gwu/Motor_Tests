@@ -144,24 +144,72 @@ Volt_avg=cell2mat(Volt_avg);
 Weight_avg=cell2mat(Weight_avg);
 Thrust_avg=cell2mat(Thrust_avg);
 
-Thrust_throttle_func = fit(Thrust_avg',Command_avg','poly2')
+Thrust_from_throttle_func = fit(Command_avg',Thrust_avg','poly2')
 % Linear model Poly2:
-%        p1 =      -1.127  (-1.382, -0.8716)
-%        p2 =       29.54  (26.55, 32.53)
-%        p3 =       18.33  (11.91, 24.76)
+% Coefficients (with 95% confidence bounds):
+%        p1 =   0.0001604  (0.000142, 0.0001787)
+%        p2 =     0.01528  (0.01209, 0.01848)
+%        p3 =           0  (fixed at bound)
+%OR:
+%      f(x) = p1*x^2 + p2*x + p3
+% Coefficients (with 95% confidence bounds):
+%        p1 =   0.0002036  (0.0001897, 0.0002175)
+%        p2 =    0.003627  (0.0003335, 0.00692)
+%        p3 =      0.6563  (0.4919, 0.8207)
+
 figure
-plot(Thrust_throttle_func,'--',Thrust_avg,Command_avg,'k.');
+plot(Thrust_from_throttle_func,'--',Command_avg,Thrust_avg,'k.');
+ylabel('Thrust (N)')
+xlabel('Throttle')
+
+
+%>>>>>>>>>>>>>use "cftool" for the curve fitting <<<<<< 
+scatter(Thrust_avg,Command_avg)
 xlabel('Thrust (N)')
 ylabel('Throttle')
+% from cftool:
+%Coefficients (with 95% confidence bounds):
+a =       129.9 ;% (100.1, 159.8)
+b =      0.3666 ;% (0.3092, 0.4241)
+c =      -96.73 ;% (-127.8, -65.62)
+Thrust_to_throttle_func = a.*Thrust_avg.^b+c;
+t1= a*0^b+c
+t2 = a*14^b+c
 
-p1=-1.784;p2=38.45;p3=6.359;
-for i=1:size(Thrust_avg,2)
-    Command_avg_14p8(i)=p1*Thrust_avg(i)^2 + p2*Thrust_avg(i) + p3;
-end
-hold on
-scatter(Thrust_avg,Command_avg_14p8,'r');
 
-%save('thrust_data_148')
+% myfittype = fittype('a + b*(Thrust_avg-c)^(1/2)',...
+%      'dependent',{'Command_avg'},'independent',{'Thrust_avg'},...
+%      'coefficients',{'a','b','c'},'Lower',[0,0])% 'Upper',[Inf,max(cdate)]
+% myfit = fit(Thrust_avg',Command_avg',myfittype)
+%scatter(Thrust_avg,[B(1)./(Thrust_avg + B(2)) + B(3)])
+%hold on
+
+% % Define ‘x’ and ‘y’ here
+% % Parameter Vector: b(1) = a,  b(2) = b,  b(3) = c
+% yfit = @(b,x) b(1)./(Thrust_avg + b(2)) + b(3);  % Objective Function
+% CF = @(b) sum((Command_avg-yfit(b,Thrust_avg)).^2);        % Cost Function
+% b0 = rand(1,3)*10;                      % Initial Parameter Estimates
+% [B, fv] = fminsearch(CF, b0);           % Estimate Parameters
+% B(1)./(Thrust_avg + B(2))+ B(3)
+
+% scatter(Thrust_avg,[B(1)./(Thrust_avg + B(2)) + B(3)])
+% hold on
+
+
+% Thrust_throttle_func = fit(Thrust_avg',Command_avg','smoothingspline')
+% Thrust_throttle_func
+% figure
+% plot(Thrust_throttle_func,'--',Thrust_avg,Command_avg,'k.');
+% ylabel('Throttle')
+% xlabel('Thrust (N)')
+
+% p1=-1.784;p2=38.45;p3=6.359;
+% for i=1:size(Thrust_avg,2)
+%     Command_avg_14p8(i)=p1*Thrust_avg(i)^2 + p2*Thrust_avg(i) + p3;
+% end
+% hold on
+% scatter(Thrust_avg,Command_avg_14p8,'r');
+% legend('Experimental data (16.2V)', 'fitted curve (16.2V)', 'function (14.8 V)')
 %%
 % to save in diffrent folder saveas(gcf,[pwd
 % ['Motor1_114_Current' ],'.fig']); and
