@@ -69,14 +69,20 @@ Again here, if F_max_torque > F_max_allowed, then decrease b and increase d1+c.
 1) Attach the motor to the test rig as shown above. Measure the distance between the pivot and motor (b), the pivot and sensor (d1), and the weight W2 and pivot (d2). If d2 is set to be d1+c, calculations become simpler.
 2) Connect the Arduino to the force sensor and the ESC using the following connections:  
    **ESC <---> Arduino**  
-   C <---> A5  
-   D <---> A4  
+   C   <---> A5  
+   D   <---> A4  
    Gnd <---> Gnd 
 
-   **Sensor <---> Arduino**  
-   10 <---> A0  
-   12 <---> Gnd  
+   **Strain meter <---> Arduino**  
+   10* <---> A0  
+   12* <---> Gnd  
 
+   **Load cell<---> Strain meter**  
+   Red wire   (+Excitation) <---> 2* (OUT +E in TB2 section)
+   White wire (-Negative)   <---> 1* (OUT -E in TB2 section)
+   Green wire (+Signal)     <---> 6* (+S IN in TB2 section)
+   Black wire (-Signal)     <---> 7* (-S IN in TB2 Section)
+   
 3) Set up the force sensor.  
    _NOTE: The force sensor may need a few minutes to warm up. Values may start higher or lower than expected but will normalize after several minutes._
 
