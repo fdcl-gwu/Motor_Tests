@@ -79,8 +79,11 @@ Again here, if F_max_torque > F_max_allowed, then decrease b and increase d1+c.
 
    **Load cell<---> Strain meter**  
    Red wire   (+Excitation) <---> 2* (OUT +E in TB2 section)
+   
    White wire (-Negative)   <---> 1* (OUT -E in TB2 section)
+   
    Green wire (+Signal)     <---> 6* (+S IN in TB2 section)
+   
    Black wire (-Signal)     <---> 7* (-S IN in TB2 Section)
    
 3) Set up the force sensor.  
