@@ -12,7 +12,7 @@ Open a Terminal in the desired folder clone the repo :
 # Installing Arduino UNO
 Download the latest version of Arduino from https://www.arduino.cc/en/Main/Software
 (for example Linux 64 bits). Then save and extract it. Arduino will be executed from there.
-In the extracted folder, open a new terminal, and to install it, type the command ./install.sh
+In the extracted folder, open a new terminal, and to install it, type the command sudo ./install.sh
 
 When it is installed, open Arduino IDE, select board from Tools, and then select the appropriate board (for example UNO).
 
