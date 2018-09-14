@@ -69,14 +69,23 @@ Again here, if F_max_torque > F_max_allowed, then decrease b and increase d1+c.
 1) Attach the motor to the test rig as shown above. Measure the distance between the pivot and motor (b), the pivot and sensor (d1), and the weight W2 and pivot (d2). If d2 is set to be d1+c, calculations become simpler.
 2) Connect the Arduino to the force sensor and the ESC using the following connections:  
    **ESC <---> Arduino**  
-   C <---> A5  
-   D <---> A4  
+   C   <---> A5  
+   D   <---> A4  
    Gnd <---> Gnd 
 
-   **Sensor <---> Arduino**  
-   10 <---> A0  
-   12 <---> Gnd  
+   **Strain meter <---> Arduino**  
+   10* <---> A0  
+   12* <---> Gnd  
 
+   **Load cell<---> Strain meter**  
+   Red wire   (+Excitation) <---> 2* (OUT +E in TB2 section)
+   
+   White wire (-Negative)   <---> 1* (OUT -E in TB2 section)
+   
+   Green wire (+Signal)     <---> 6* (+S IN in TB2 section)
+   
+   Black wire (-Signal)     <---> 7* (-S IN in TB2 Section)
+   
 3) Set up the force sensor.  
    _NOTE: The force sensor may need a few minutes to warm up. Values may start higher or lower than expected but will normalize after several minutes._
 
@@ -102,11 +111,20 @@ Again here, if F_max_torque > F_max_allowed, then decrease b and increase d1+c.
 8) Repeat steps 4-6 for each voltage you want to test. Let the motor cool between each test to keep the data consistent. It is important to do a force calibration before or after every test as the force sensor's readings could change.
 
 # Post processing the data
-1. Run post_porcess_thrust_test.m (instructions are provided inside the mfile) to compute and plot all required data from the thrust test.
-2. Run post_porcess_torque_test.m (instructions are provided inside the mfile) to compute and plot all required data from the torque test.
-3. To compute C_tau, run compute_C_tau (instructions are provided inside the mfile). 
+1. Make a new folder, and copy all the calibration text files as well as motor test data text files in it.
+2. From the folder called "Post_process_Matlab_files", copy all the three mfiles to the folder that you made it.
+3. Run post_porcess_thrust_test.m (instructions are provided inside the mfile) to compute and plot all required data from the thrust test. You may change the name of the text files which you saved from your experiment.
+4. Run post_porcess_torque_test.m (instructions are provided inside the mfile) to compute and plot all required data from the torque test.
+5. To compute C_tau, run compute_C_tau (instructions are provided inside the mfile). 
 
-The results of processing data for Tiger 700 motor and 11*3.7 CF propeller with 14.8 V is provided in the report in the Report folder.
+The results of processing data for Tiger 700 motor and 11*3.7 CF propeller with 14.8 V & 16.2 V are provided, and for 14.8 is summarized  in the Report folder inside the "tiger_5_31_2018_14p8 volt" folder.
+thrust=p1*throttle^2 + p2*throttle + p3.
+
+From 14.8V:  C_tau=0.0135.
+
+From 16.2V: p1 = 0.0002036, p2 = 0.003627, p3 = 0.6563. So, throttle=sqrt((thrust-p3)/p1+p2^2/4/p1/p1)-p2/2/p1
+or you can type "cftool" in Matlab command, and fit a function to data:
+![alt text](Photo_readme/fit.gif "Description goes here")
 
 # Find voltage and throttle relationships
 Run analysis.py to filter data and format it for graphing. Be sure to update the file paths and tailor the data analysis to fit your own needs.
