@@ -1,26 +1,16 @@
 clear;close all;clc
 %% calibrate:
 load thrusts_data 
-RPM_thrustt=RPM_avg;% 
 load torques_data
-AxesFont_f=16;font_f=16;
 
 size(Thrust_avg)
 size(Torque_avg)
 Torque_thrust_function = fit(Thrust_avg',Torque_avg','poly1')
 figure
-set(gcf,'DefaultAxesFontSize',AxesFont_f);
 plot(Torque_thrust_function,'--',Thrust_avg,Torque_avg','k.');
-xlabel('Thrust (N)','interpreter','latex')
-ylabel('Torque (Nm)','interpreter','latex')
+xlabel('Thrust avg (N)')
+ylabel('Torque avg (Nm)')
 
-
-Torque_w_function = fit(RPM_thrustt',Torque_avg','poly2')
-figure
-set(gcf,'DefaultAxesFontSize',AxesFont_f);
-plot(Torque_w_function,'--',RPM_thrustt,Torque_avg','k.');
-xlabel('Rotational speed (rpm)','interpreter','latex')
-ylabel('Torque (Nm)','interpreter','latex')
 %% Data from motor manual:
 T_avg_manual=[4.508;6.958;8.526;10.584;12.054];
 Torque_avg_manual=[0.08;0.13;0.15;0.19;0.21];

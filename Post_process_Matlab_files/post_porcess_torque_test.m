@@ -62,7 +62,7 @@ clearvars filename delimiter formatSpec fileID dataArray ans;
 %% Variable scalings
 Current=Current/10;
 Volt=Volt./10;
-RPM=RPM_Hz.*780/14;% based on the motor manual the max rotor speed is about 8799., ans it is 12N14P
+RPM=RPM_Hz.*60;
 
 Weight=9.8*mass_function(Omega_read)/1000;% kg
 %thrust=arm_gauge.*Weight/arm_motor;% N

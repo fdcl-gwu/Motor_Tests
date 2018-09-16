@@ -2,7 +2,6 @@ clear;close all;clc
 %% Import text data:
 % First import each text file as a numeric matrix. In matlab set "Output
 % Type" as "Numeric Matrix", shown in the figure.
-
 % Or use the following:
 calib0 = import_text_data("calib_0.txt");
 calib72 = import_text_data("calib_72.txt");
@@ -111,15 +110,14 @@ clearvars filename delimiter formatSpec fileID dataArray ans;
 %% Variable scalings
 Current=Current/10;
 Volt=Volt./10;
-RPM=RPM_Hz.*60;
-
+RPM=RPM_Hz.*780/14;% based on the motor manual the max rotor speed is about 8799., ans it is 12N14P
 Weight=9.8*mass_function(Omega_read)/1000;% kg
 thrust=arm_load_cell.*Weight/arm_motor;% N
 %%
 % cell arrays:
 for j=1:22
     A{j} =find(Command==10+(j-1)*10);
-    Command_avg{j}=10+(j-1)*10;
+    Throttle{j}=10+(j-1)*10;
     init_state{j}=find(State(A{j})==255,1)+150;% A{j}(1)+% 150=350*3/7, 350=7700/21
                                                % do not use 3 first seconds of data
     Current_avg{j}=mean(Current(A{j}(init_state{j}:end)));
@@ -133,7 +131,7 @@ for j=1:22
     Thrust_avg{j}=mean(thrust(A{j}(init_state{j}:end)));
     %Torque_avg{j}=mean(torque(A{j}(init_state{j}:end)));
 end
-Command_avg=cell2mat(Command_avg);
+Throttle=cell2mat(Throttle);
 init_state=cell2mat(init_state);
 Current_avg=cell2mat(Current_avg);
 Temp_avg=cell2mat(Temp_avg);
@@ -144,7 +142,7 @@ Volt_avg=cell2mat(Volt_avg);
 Weight_avg=cell2mat(Weight_avg);
 Thrust_avg=cell2mat(Thrust_avg);
 
-Thrust_from_throttle_func = fit(Command_avg',Thrust_avg','poly2')
+Thrust_from_throttle_func = fit(Throttle',Thrust_avg','poly2')
 % Linear model Poly2:
 % if p3 forced to set to 0, to have 0thrust from throttle:
 % Coefficients (with 95% confidence bounds):
@@ -160,7 +158,7 @@ Thrust_from_throttle_func = fit(Command_avg',Thrust_avg','poly2')
        p3 =      0.6563 ;% (0.4919, 0.8207)
 
 figure
-plot(Thrust_from_throttle_func,'--',Command_avg,Thrust_avg,'k.');
+plot(Thrust_from_throttle_func,'--',Throttle,Thrust_avg,'k.');
 ylabel('Thrust (N)')
 xlabel('Throttle')
 title('Thrust=p1*throttle^2 + p2*throttle + p3')
@@ -169,10 +167,19 @@ title('Thrust=p1*throttle^2 + p2*throttle + p3')
 Command_avg_inversepoly2=sqrt((Thrust_avg-p3)/p1+p2^2/4/p1/p1)-p2/2/p1;
 
 figure
-plot(Thrust_avg,Command_avg_inversepoly2,'--',Thrust_avg,Command_avg,'k.');
+plot(Thrust_avg,Command_avg_inversepoly2,'--',Thrust_avg,Throttle,'k.');
 xlabel('Thrust (N)')
 ylabel('Throttle')
 title('throttle=sqrt((Thrust-p3)/p1+p2^2/4/p1/p1)-p2/2/p1')
+
+figure
+AxesFont_f=16;font_f=16;
+figure
+set(gcf,'DefaultAxesFontSize',AxesFont_f);
+plot(Command_avg_inversepoly2,Thrust_avg,'--',Throttle,Thrust_avg,'k.','Linewidth',1);
+ylabel('Thrust (N)','fontsize',font_f,'interpreter','latex')
+xlabel('Throttle','fontsize',font_f,'interpreter','latex')
+%title('throttle=sqrt((Thrust-p3)/p1+p2^2/4/p1/p1)-p2/2/p1')
 
 %>>>>>>>>>>>>>use "cftool" for the curve fitting <<<<<< 
 % from cftool: Type cftool in matlab comamnd line:
@@ -185,6 +192,22 @@ Thrust_to_throttle_func = a.*Thrust_avg.^b+c;
 t1= a*0^b+c
 t2 = a*14^b+c
 %%
+save('thrusts_data.mat','Throttle','Thrust_avg','RPM_avg')
+
+Thrust_from_w_func = fit(RPM_avg',Thrust_avg','poly2')
+figure
+set(gcf,'DefaultAxesFontSize',AxesFont_f);
+plot(Thrust_from_w_func,'--',RPM_avg,Thrust_avg,'k.');%,'Linewidth',1);
+ylabel('Thrust (N)','fontsize',font_f,'interpreter','latex')
+xlabel('Rotational speed (RPM)','fontsize',font_f,'interpreter','latex')
+figure
+set(gcf,'DefaultAxesFontSize',AxesFont_f);
+scatter(RPM_avg,Thrust_avg,'Linewidth',1)
+ylabel('Thrust (N)','fontsize',font_f,'interpreter','latex');
+xlabel('Rotation speed (RPM)','fontsize',font_f,'interpreter','latex')
+saveas(gcf,'C_tau_148RPM.fig');
+saveas(gcf,'C_tau_148RPM.eps','epsc2');
+
 % to save in diffrent folder saveas(gcf,[pwd
 % ['Motor1_114_Current' ],'.fig']); and
 % saveas(gcf,[pwd ['Motor1_120_Current' ],'.eps'],'epsc2');
@@ -193,57 +216,61 @@ AxesFont_f=16;font_f=16;
 set(gcf,'DefaultAxesFontSize',AxesFont_f);
 
 Power_avg=Volt_avg.*Current_avg;
-scatter(Command_avg,Power_avg)
-xlabel('Command_avg','fontsize',font_f,'interpreter','latex');
+scatter(Throttle,Power_avg)
+xlabel('Throttle','fontsize',font_f,'interpreter','latex');
 ylabel('Power_avg','fontsize',font_f,'interpreter','latex')
 saveas(gcf,'C_tau_148Powerfig');
 saveas(gcf,'C_tau_148Power','epsc2');
 
-scatter(Command_avg,Current_avg)
-xlabel('Command_avg','fontsize',font_f,'interpreter','latex');
+scatter(Throttle,Current_avg)
+xlabel('Throttle','fontsize',font_f,'interpreter','latex');
 ylabel('Current_avg','fontsize',font_f,'interpreter','latex')
 saveas(gcf,'C_tau_148Currentfig');
 saveas(gcf,'C_tau_148Current','epsc2');
 figure
-scatter(Command_avg,Temp_avg)
-xlabel('Command_avg');ylabel('Temp_avg')
+scatter(Throttle,Temp_avg)
+xlabel('Throttle');ylabel('Temp_avg')
 saveas(gcf,'C_tau_148Temp.fig');
 saveas(gcf,'C_tau_148Temp.eps','epsc2');
 figure
-scatter(Command_avg,RPM_Hz_avg)
-xlabel('Command_avg','fontsize',font_f,'interpreter','latex');
+scatter(Throttle,RPM_Hz_avg)
+xlabel('Throttle','fontsize',font_f,'interpreter','latex');
 ylabel('RPM_Hz_avg','fontsize',font_f,'interpreter','latex')
 saveas(gcf,'C_tau_148RPM_Hz.fig');
 saveas(gcf,'C_tau_148RPM_Hz.eps','epsc2');
+
+
 figure
-scatter(Command_avg,RPM_avg)
-xlabel('Command_avg','fontsize',font_f,'interpreter','latex');
+set(gcf,'DefaultAxesFontSize',AxesFont_f);
+scatter(Throttle,RPM_avg)
+xlabel('Throttle','fontsize',font_f,'interpreter','latex');
 ylabel('RPM_avg','fontsize',font_f,'interpreter','latex')
 saveas(gcf,'C_tau_148RPM.fig');
 saveas(gcf,'C_tau_148RPM.eps','epsc2');
+
 figure
-scatter(Command_avg,MAH_avg)
-xlabel('Command_avg','fontsize',font_f,'interpreter','latex');
+scatter(Throttle,MAH_avg)
+xlabel('Throttle','fontsize',font_f,'interpreter','latex');
 ylabel('MAH_avg','fontsize',font_f,'interpreter','latex')
 saveas(gcf,'C_tau_148MAH.fig');
 saveas(gcf,'C_tau_148MAH.eps','epsc2');
 figure
-scatter(Command_avg,Volt_avg)
-xlabel('Command_avg','fontsize',font_f,'interpreter','latex');
+scatter(Throttle,Volt_avg)
+xlabel('Throttle','fontsize',font_f,'interpreter','latex');
 ylabel('Volt_avg','fontsize',font_f,'interpreter','latex')
 saveas(gcf,'C_tau_148Volt.fig');
 saveas(gcf,'C_tau_148Volt.eps','epsc2');
 figure
-scatter(Command_avg,Weight_avg)
-xlabel('Command_avg','fontsize',font_f,'interpreter','latex');
+scatter(Throttle,Weight_avg)
+xlabel('Throttle','fontsize',font_f,'interpreter','latex');
 ylabel('Weight_avg','fontsize',font_f,'interpreter','latex')
 saveas(gcf,'C_tau_148wieght.fig');
 saveas(gcf,'C_tau_148wieght.eps','epsc2');
 figure
-scatter(Command_avg,Thrust_avg)
-xlabel('Command_avg','fontsize',font_f,'interpreter','latex');
-ylabel('Thrust_avg (N)','fontsize',font_f,'interpreter','latex')
+scatter(Throttle,Thrust_avg)
+xlabel('Throttle','fontsize',font_f,'interpreter','latex');
+ylabel('Thrust (N)','fontsize',font_f,'interpreter','latex')
 saveas(gcf,'C_tau_148thrust.fig');
 saveas(gcf,'C_tau_148thrust.eps','epsc2');
 %% saving the requied data to find C_tau
-save('thrusts_data.mat','Command_avg','Thrust_avg')
+save('thrusts_data.mat','Throttle','Thrust_avg','RPM_avg')

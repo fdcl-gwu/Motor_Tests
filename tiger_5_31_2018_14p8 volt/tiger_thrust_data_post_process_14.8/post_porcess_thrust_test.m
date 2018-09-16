@@ -38,7 +38,8 @@ ylabel('Mass (gr)')
 arm_motor=8.2/100;
 arm_load_cell=23/100;
 %% Read File
-filename = 'F:\FDCL Mahdis Git\Motor_Tests\tiger_5_31_2018\tiger_thrust_data_post_process_14.8\thrust_tets_148.txt'
+filename = 'F:\FDCL Mahdis Git\Motor_Tests\tiger_5_31_2018_14p8 volt\tiger_thrust_data_post_process_14.8\thrust_tets_148.txt'
+            
 delimiter = ',';
 formatSpec = '%f%f%f%f%f%f%f%f%[^\n\r]';
 fileID = fopen(filename,'r');
@@ -57,7 +58,7 @@ clearvars filename delimiter formatSpec fileID dataArray ans;
 %% Variable scalings
 Current=Current/10;
 Volt=Volt./10;
-RPM=RPM_Hz.*60;
+RPM=RPM_Hz.*780/14;% based on the motor manual the max rotor speed is about 8799, and motor is 12N14P
 
 Weight=9.8*mass_function(Omega_read)/1000;% kg
 thrust=arm_load_cell.*Weight/arm_motor;% N
@@ -90,13 +91,11 @@ Volt_avg=cell2mat(Volt_avg);
 Weight_avg=cell2mat(Weight_avg);
 Thrust_avg=cell2mat(Thrust_avg);
 
-<<<<<<< HEAD:tiger_5_31_2018/tiger_thrust_data_post_process/post_porcess_thrust_test.m
-
-mass_function = fit(Command_avg,Thrust_avg,'poly1')
-
+size(Command_avg)
+size(Thrust_avg)
+mass_function = fit(Command_avg',Thrust_avg','poly1')
 
 save('thrust_data_148')
-=======
 Thrust_throttle_func = fit(Thrust_avg',Command_avg','poly2')
 % Linear model Poly2:
 %      Thrust_throttle_func(x) = p1*x^2 + p2*x + p3
@@ -105,13 +104,30 @@ Thrust_throttle_func = fit(Thrust_avg',Command_avg','poly2')
 %        p2 =       38.45  (34.62, 42.28)
 %        p3 =       6.359  (-0.6873, 13.4)
 figure
+AxesFont_f=16;font_f=16;
+set(gcf,'DefaultAxesFontSize',AxesFont_f);
 plot(Thrust_throttle_func,'--',Thrust_avg,Command_avg,'k.');
-xlabel('Thrust (N)')
-ylabel('Throttle')
+xlabel('Thrust (N)','fontsize',font_f,'interpreter','latex')
+ylabel('Throttle','fontsize',font_f,'interpreter','latex')
 
+
+thrust_RPM_function = fit(RPM_avg',Thrust_avg','poly2')
+figure
+AxesFont_f=16;font_f=16;
+set(gcf,'DefaultAxesFontSize',AxesFont_f);
+plot(thrust_RPM_function,'--',RPM_avg,Thrust_avg,'k.');
+ylabel('Thrust (N)','fontsize',font_f,'interpreter','latex')
+xlabel('Rotational speed (rpm)','fontsize',font_f,'interpreter','latex')
+
+Thrust_from_throttle_func = fit(Command_avg',Thrust_avg','poly2')
+figure
+AxesFont_f=16;font_f=16;
+set(gcf,'DefaultAxesFontSize',AxesFont_f);
+plot(Thrust_from_throttle_func,'--',Command_avg,Thrust_avg,'k.');
+ylabel('Thrust (N)','fontsize',font_f,'interpreter','latex')
+xlabel('Throttle','fontsize',font_f,'interpreter','latex')
 
 %save('thrust_data_148')
->>>>>>> mahdis:tiger_5_31_2018_14p8 volt/tiger_thrust_data_post_process_14.8/post_porcess_thrust_test.m
 %%
 % to save in diffrent folder saveas(gcf,[pwd
 % ['Motor1_114_Current' ],'.fig']); and
@@ -166,4 +182,4 @@ ylabel('Thrust_avg (N)','fontsize',font_f,'interpreter','latex')
 saveas(gcf,'C_tau_148thrust.fig');
 saveas(gcf,'C_tau_148thrust.eps','epsc2');
 %% saving the requied data to find C_tau
-save('thrusts_data.mat','Command_avg','Thrust_avg')
+save('thrusts_data.mat','Command_avg','Thrust_avg','RPM_avg')
