@@ -182,4 +182,4 @@ ylabel('Thrust_avg (N)','fontsize',font_f,'interpreter','latex')
 saveas(gcf,'C_tau_148thrust.fig');
 saveas(gcf,'C_tau_148thrust.eps','epsc2');
 %% saving the requied data to find C_tau
-save('thrusts_data.mat','Command_avg','Thrust_avg','RPM_avg')
+save('thrusts_data.mat','Command_avg','Thrust_avg','RPM_avg','Current_avg','Volt_avg')
