@@ -103,6 +103,7 @@ Again here, if F_max_torque > F_max_allowed, then decrease b and increase d1+c.
     ```
     4. Add a known mass, for example 46 gr, to the rig and run record.py again. Make sure to change the file name in record.py; A recommended file name, for 46 gr mass, is 'calib_46.txt'. You should now have two text files that contain a single column of data read from the force sensor.
     5. Repeat step 5, for different masses. Make sure that you do not overload the load cell.
+    6. Go through each text file to make sure all the data will be readable and correct. For example, within the first few data points, somtimes "332" will be shortened to "32". This will affect your calibration so those incorrect values should be removed from the data set.
 
 6) Attach a power supply to the motor and set it at a specific voltage (Tiger 700 motor and 11*3.7 CF propeller with 14.8 V), checking with a multimeter. The Voltage may drift during the tests so be prepared to adjust the supply accordingly.
 
@@ -134,6 +135,13 @@ Using the data from analysis.py, you can run escVolt2cmd.py, escVolt2cmd_send.py
 - inputVolt2cmd_send.py does the calculations of inputVolt2cmd.py and sends the command to the ESC.
 - escVolt2cmd_send.py reads voltage from the ESC, takes the desired force and calculates the proper command. It continuously updates the command based on the changing voltage.
 - escVot2cmd.py simulates the behavior of escVolt2cmd_send.py by predicting the voltage change from a command change.
+
+# Making your own analysis script
+If you want to make your own analysis script, there are a few things to keep in mind:
+* The ESC is sending bad data if the maxPWM value is less than 255 so you will need to filter out those data points
+* The data includes a few seconds where the motor is not spinning. It is a good idea to filter out all data with rpm value below a certain min rpm (e.g. 10)
+* There is a risetime on the load cell so you will also need to cut all data within the risetime. Risetime will differ for each loadcell, but for our setup, removing the first 150 data points (after all the other filtering) was sufficient.
+
 
 Data from the following motors are included:
 - robbe Roxxy BL-Motor 2827-35, 760kv. 10x4.5 prop
