@@ -1,43 +1,67 @@
-This repository includes the code and the instructions for testing motors and measuring the relation between motor thrust and torque and throttle (command). 
+This repository includes the code and the instructions for testing motors and measuring the relation between motor thrust and torque and throttle command using a load cell(**Omega LCAE-3KG**). 
+
+# Contents
+1. [Setting-up the Repositoy](#setting-up-the-repository)
+1. [Hardware Setup](#hardware-setup)
+1. [Motor Calibration](#motor-calibration)
+1. [Post Processing](#post-processing)
 
 # Setting-up the repository
-Open a Terminal in the desired folder clone the repo :
+
+Open a terminal in the desired directory and clone the repository:
 ```sh
 git clone https://github.com/fdcl-gwu/Motor_Tests
 cd Motor_Tests
 ```
 
-# Installing Arduino IDE
-Download the latest version of Arduino from https://www.arduino.cc/en/Main/Software.
+## Dependencies
+1. Arduino IDE: download the latest version of Arduino from https://www.arduino.cc/en/Main/Software.
+2. pyserial library: `pip install pyserial`
+
+
 After the installation is finished, open Arduino IDE, select the correct `Board` from `Tools` in the menu bar (for example "Arduino Due")
 After plugging-in the Arduino board with a USB to the computer, also select the correct `Port` under `Tools`.
 
-# Calibrating the Meter
 
 # Hardware Setup
 
-In this section, based on the loadcell capacity, the maximum weight (`W2`) that will be used for calibration, and the distance of motor and load cell from pivot will be measured.
-The Matlab mfile (`max_load.m`) used to to calculate the following is provided in the `Motor_Tests` folder.
-
 ![alt text](Photo_readme/calib.gif "Hardware setup")
 
-In the followings, `W_motor` is the motor weight, and
-`F_max_allowed` is the maximum load that the laod cell can measure. 
-From the load cell manual (**Omega LACE 600G**), the maximum is `0.6 kgf`, which is equal to `0.6*9.8=5.88 N`.
-`W1` is the weight `d1` distance from pivot to have a horizontal bar (balancing the weight of the motor on the bar).
+1. Attach the motor to the test rig as shown above. 
+1. Measure the distance between the pivot and motor (`b`), the pivot and sensor (`d1`), and the weight `W2` and pivot (`d2`). If `d2` is set to be `d1 + c`, calculations become simpler.
+2. Connect the Arduino to the force sensor and the ESC using the following connections: 
 
+    **ESC <---> Arduino**
+    ``` 
+    C   <---> A5  
+    D   <---> A4  
+    Gnd <---> Gnd 
+    ```
+    **Strain meter <---> Arduino**  
+    ```
+    10* <---> A0  
+    12* <---> Gnd  
+    ```
+    **Load cell<---> Strain meter**  
+    ```
+    Red wire   (+Excitation) <---> 2* (OUT +E in TB2 section)
+    White wire (-Negative)   <---> 1* (OUT -E in TB2 section)
+    Green wire (+Signal)     <---> 6* (+S IN in TB2 section)
+    Black wire (-Signal)     <---> 7* (-S IN in TB2 Section)
+    ```
 
-## Measure the maximum allowable load (`W2`) for calibration:
+4. Find the maximum load (`W_max`) that can be applied at the rig at the motor end. Do not apply higher force on the load cell than this value as it may damage the sensor.
+    1. `W1`: dead weight which will be always on the rig to avoid unnecesary vibrations and impacts on the load cell during the motor startup
+    2. `W2`: variable weighs
+    3. `W_motor`: motor weight (including the propellers attached)
+    4. `F_max_allowed`: maximum load the laod cell can measure, for the LCAE-3KG sensor, this is `3 kg`, which is roughly equal to `3.0 * 9.81 = 29.43 N`.
+    ```
+    W2_max = (F_max_allowed * (d1 + c) + W_motor * b - W1 * d1) / d2 (N)
+    m2_max = W2_max / 9.8 / 1000 (gram)
+    ```
+    **DO NOT** not use a mass heavier more than `m2_max`.
 
-In this case, the motor is not running, so there is no thrust or torque from the motor.
-
-```
-W2_max = (F_max_allowed(d1+c)+W_motor*b-W1*d1)/d2 (N)
-m2_max = W2_max/9.8/1000 (gram)
-```
-
-So, do not use a weight with more than `m2_max` mass.
-
+<!-- 
 ## Measure the maximum thrust that the load cell can measure:
 
 In other words, measure the amount of force that the load cell should measure if the motor provides the maximum thrust.
@@ -59,54 +83,56 @@ In other words, measure the amount of force that the load cell should measure if
 F_max_torque = (tau_max-W_motor*b+W1*d1)/(d1+c).
 ```
 
-Again here, if `F_max_torque` is greater than `F_max_allowed`, then decrease `b` and increase `d1 + c`. 
+Again here, if `F_max_torque` is greater than `F_max_allowed`, then decrease `b` and increase `d1 + c`.  -->
 
-# Running a Motor Test
-1. Attach the motor to the test rig as shown above. Measure the distance between the pivot and motor (`b`), the pivot and sensor (`d1`), and the weight `W2` and pivot (`d2`). If `d2` is set to be `d1 + c`, calculations become simpler.
-2. Connect the Arduino to the force sensor and the ESC using the following connections: 
+# Motor Calibration
 
-    **ESC <---> Arduino**
-    ``` 
-    C   <---> A5  
-    D   <---> A4  
-    Gnd <---> Gnd 
-    ```
-    **Strain meter <---> Arduino**  
-    ```
-    10* <---> A0  
-    12* <---> Gnd  
-    ```
-    **Load cell<---> Strain meter**  
-    ```
-    Red wire   (+Excitation) <---> 2* (OUT +E in TB2 section)
-    White wire (-Negative)   <---> 1* (OUT -E in TB2 section)
-    Green wire (+Signal)     <---> 6* (+S IN in TB2 section)
-    Black wire (-Signal)     <---> 7* (-S IN in TB2 Section)
-    ```
-3. Set up the force sensor.  
+Motor calibration consists of finding two relationships:
+1. meter calibration: analog output read by the Arduino <=> actual value on the load cell
+1. thrust calibration: actual load on the load cell <=> command value written to the ESC
+
+## Meter Calibration
+
+1. Turn on the load cell  
    _**NOTE**: The force sensor may need a few minutes to warm up. Values may start higher or lower than expected but will normalize after several minutes._
 
-4. Open `python_scripts/record.py`. Update the line `location='/dev/ttyACM0'` with the specific port name corresponding to the Arduino. To find the port name, in the Terminal write:
-    ```
-    ls /dev/tty*
-    ```
-5. Run a force calibration:
+1. Update `python_scripts/record.py`:
+    1. Update the line `location = '/dev/ttyACM0'` with the specific port name corresponding to the Arduino. To find the port name, in the Terminal write:
+        ```
+        ls /dev/tty*
+        ```
+    1. Create a directory specific to the motor propeller combination, ex `tiger_ms1101` and update the `<data dir>` in `text_file = open('../<data dir>/calib_0.txt', 'w')` with it's name.
+1. Run the meter calibration:
+    1. Make sure no weights are on the bar except for the motor with attached propeller and `W1`.
+    1. Press `TARE` button on the meter.
     1. Upload `strain_reader.ino` to the Arduino.
-    2. In `python_scripts/record.py`, update the line `text_file = open('../Results/calib_0.txt', 'w')` with the location and the name of the text file for data which will be saved later. A recommended text file name for no weight is `calib_0.txt`. 
-    3. With no weight on the sensor aside from the rig, run `record.py` for several seconds to determine the reading with zero thrust. To do this, open a terminal in the folder called `python_scripts` and type
-    :
+    1. Run `record.py` for several seconds to determine the reading with zero thrust (must need atleast 2000 lines of readings). From `python_scripts` directory:
         ```
         python record.py
         ```
-    4. Add a known mass, for example `46 gram`, to the rig and run `record.py` again. Make sure to change the file name in `record.py`. A recommended file name, for `46 gram` mass, is `calib_46.txt`. You should now have two text files that contain a single column of data read from the force sensor.
-    5. Repeat step 4, for different masses. Make sure that you do not overload the load cell.
-    6. Go through each text file to make sure all the data will be readable and correct. For example, within the first few data points, somtimes "332" will be shortened to "32". This will affect your calibration so those incorrect values should be removed from the data set.
+    1. Add a known mass (`W2`), for example `46 gram`, to the rig and change the file name in `record.py`. A recommended file name, for `46 gram` mass, is `calib_46.txt`. Run `record.py` again.
+    1. Repeat step 4, for different masses (total 4 should be enough). Make sure that you do not overload the load cell.
+    1. Go through each text file to make sure all the data will be readable and correct. For example, within the first few data points, somtimes "332" will be shortened to "32". This will affect your calibration so those incorrect values should be removed from the data set.
 
-6) Attach a power supply to the motor and set it at a specific voltage (Tiger 700 motor and 11*3.7 CF propeller with 14.8 V), checking with a multimeter. The Voltage may drift during the tests so be prepared to adjust the supply accordingly.
+## Motor Calibration
 
-7) Upload `step_test.ino` and run `record.py `(remember to update the file name, a recommended file name is `motor_voltage.txt`). Make sure that the propellers are blowing wind downside, otherwise reverse two of the motor wires. This should take about 15 mins. 
+**NOTE**: read all the below steps before continuing them
 
-8) Repeat steps 4-6 for each voltage you want to test. Let the motor cool between each test to keep the data consistent. It is important to do a force calibration before or after every test as the force sensor's readings could change.
+1. Remove `W2`, but leave `W1`.
+1. Set the power supply to  a fixed voltage that you would expect your battery to supply.
+1. Make sure you are safe from the rotating propellers, and wear safety glasses.
+1. Attach the motor to the power supply. 
+    **NOTE**: The Voltage may drift during the tests so be prepared to adjust the supply accordingly.
+1. Upload `step_test.ino` to the Arduino board.
+1. Update the file name, a recommended file name is `motor_calib_<voltage>.txt`)
+1. Run `record.py `.
+1. The code is going to run the motor at a specific command for a while and stop. Then increase the command and run again and stop. 
+1. This will continue from the motor command of 10 until 250.
+1. The whole process is going to take around 10 minutes, make sure no one else goes near the propeller during the process.
+
+<!-- 8) Repeat steps 4-6 for each voltage you want to test. Let the motor cool between each test to keep the data consistent. It is important to do a force calibration before or after every test as the force sensor's readings could change. -->
+
+**NOTE**: Make sure that the propellers are blowing wind downside, otherwise reverse two of the motor wires.
 
 # Post processing the data
 1. Make a new folder, and copy all the calibration text files as well as motor test data text files in it.
