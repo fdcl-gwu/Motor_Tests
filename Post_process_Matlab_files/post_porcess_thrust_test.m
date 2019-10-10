@@ -14,10 +14,10 @@ calib600 = import_text_data(path + "calib_600.txt");
 
 
 % length of the arm from pivot to the motor in meters
-arm_motor = 8.5 / 100;
+arm_motor = 18.5 / 100;
 
 % length of the arm from pivot to the load cell in meters
-arm_load_cell = 23 / 100;  
+arm_load_cell = 14.5 / 100;  
 
 
 save all_calib_thrust_data
