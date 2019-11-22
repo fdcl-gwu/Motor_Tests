@@ -3,7 +3,7 @@ clear;close all;clc
 path = "../tiger_u3_apc10x4p7/";
 motor_calibration_file = path + 'motor_calib_16p4.txt';
 
-y=[0; 72; 100; 172; 500; 600];  % W2 (gram) on the sensor
+W2_list = [0; 72; 100; 172; 500; 600];  % W2 (gram) on the sensor
 
 calib0 = import_text_data(path + "calib_0.txt");
 calib72 = import_text_data(path + "calib_72.txt");
@@ -17,7 +17,7 @@ calib600 = import_text_data(path + "calib_600.txt");
 arm_motor = 18.5 / 100;
 
 % length of the arm from pivot to the load cell in meters
-arm_load_cell = 24.5 / 100;  
+arm_load_cell = 24.2 / 100;  
 
 
 save all_calib_thrust_data
@@ -25,20 +25,21 @@ save all_calib_thrust_data
 %% Reading calibration data:
 
 % load all_calib_thrust_data
-x(1)=mean(keep_last_2000(calib0));
-x(2)=mean(keep_last_2000(calib72));
-x(3)=mean(keep_last_2000(calib100));
-x(4)=mean(keep_last_2000(calib172));
-x(5)=mean(keep_last_2000(calib500));
-x(6)=mean(keep_last_2000(calib600));
+meter_reading(1)=mean(keep_last_2000(calib0));
+meter_reading(2)=mean(keep_last_2000(calib72));
+meter_reading(3)=mean(keep_last_2000(calib100));
+meter_reading(4)=mean(keep_last_2000(calib172));
+meter_reading(5)=mean(keep_last_2000(calib500));
+meter_reading(6)=mean(keep_last_2000(calib600));
 
 %% Meter Calibration
 % Find the relationship between reading from load cell and weights
 
-mass_function = fit(x', y, 'poly1')
+meter_reading_to_mass = fit(meter_reading', W2_list, 'poly1')
 
 figure
-plot(x, mass_function(x), '--', x, y', 'k.');
+plot(meter_reading, meter_reading_to_mass(meter_reading), '--', ...
+    meter_reading, W2_list', 'k.');
 title('Meter Calibration');
 xlabel('Meter Reading');
 ylabel('Mass (grams)');
@@ -68,8 +69,9 @@ Current = Current / 10;
 Volt = Volt ./ 10;
 RPM = RPM_Hz .* 60;
 
-Weight= 9.8 * mass_function(Omega_read) / 1000;  % kg
+Weight = 9.81 * meter_reading_to_mass(Omega_read) / 1000;  % kg
 thrust = arm_load_cell .* Weight / arm_motor;  % N
+
 
 for j = 1:25  % Arduino sends 10:10:250
     A{j} = find(Command == 10 + (j - 1) * 10);
@@ -98,8 +100,8 @@ Volt_avg = cell2mat(Volt_avg);
 Weight_avg = cell2mat(Weight_avg);
 Thrust_avg = cell2mat(Thrust_avg);
 
-
-calibration_curve = fit(Thrust_avg', Command_avg', 'poly2')
+% calibration_curve = fit(Thrust_avg', Command_avg', 'poly2')
+calibration_curve = fit(Thrust_avg', Command_avg', 'power2')
 
 figure
 plot(Thrust_avg, calibration_curve(Thrust_avg), '--', ...

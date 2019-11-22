@@ -136,10 +136,10 @@ Motor calibration consists of finding two relationships:
 
 # Post processing the data
 1. Make a new folder, and copy all the calibration text files as well as motor test data text files in it.
-2. From the folder called "Post_process_Matlab_files", copy all the three mfiles to the folder that you made it.
-3. Run post_porcess_thrust_test.m (instructions are provided inside the mfile) to compute and plot all required data from the thrust test. You may change the name of the text files which you saved from your experiment.
-4. Run post_porcess_torque_test.m (instructions are provided inside the mfile) to compute and plot all required data from the torque test.
-5. To compute C_tau, run compute_C_tau (instructions are provided inside the mfile). 
+<!-- 2. From the folder called "Post_process_Matlab_files", copy all the three mfiles to the folder that you made it. -->
+3. Run `post_porcess_thrust_test.m` (instructions are provided inside the mfile) to compute and plot all required data from the thrust test. You may change the name of the text files which you saved from your experiment.
+4. Run `post_porcess_torque_test.m` (instructions are provided inside the mfile) to compute and plot all required data from the torque test.
+5. To compute `C_tau`, run `compute_C_tau.m` (instructions are provided inside the mfile). 
 
 The results of processing data for Tiger 700 motor and 11*3.7 CF propeller with 14.8 V & 16.2 V are provided, and for 14.8 is summarized  in the Report folder inside the "tiger_5_31_2018_14p8 volt" folder.
 
