@@ -25,7 +25,7 @@ n = 1
 while True:
     if ser.inWaiting():
         x = ser.read()
-        # text_file.write(str(x.decode('utf-8')))
+        # text_file.write(str(x.decode('utf-8')))  # use this on Mac
         text_file.write(str(x))
         print(str(x.decode('utf-8')), end='')
 
