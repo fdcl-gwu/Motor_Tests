@@ -1,7 +1,7 @@
 clear;close all;clc
 
-path = "../tiger_u3_apc10x4p7/";
-motor_calibration_file = path + 'motor_calib_16p4.txt';
+path = "../tiger_mn3110-17_apc10x4p7/";
+motor_calibration_file = path + 'motor_calib_16p2.txt';
 
 W2_list = [0; 72; 100; 172; 500; 600];  % W2 (gram) on the sensor
 
